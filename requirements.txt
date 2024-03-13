@@ -13,7 +13,6 @@ rich
 scikit-learn
 statsmodels
 sympy
-tensorflow
 tweepy
 # yulewalker  # uncomment once audio_filters/equal_loudness_filter.py is fixed
 typing_extensions
