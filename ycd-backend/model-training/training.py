@@ -1,15 +1,65 @@
 import random as random
-import polars as pl
-import tensorflow as tf
-import keras
+import pandas as pd
+import pickle
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics import accuracy_score
 
-AUTOTUNE = tf.data.AUTOTUNE
-counter = 0
 
 # Get Data
-data = list(pl.read_csv("training-data.csv", has_header=False, encoding="ISO-8859-1").select(["column_1", "column_6"]).rows())
-random.shuffle(data)
+data = pd.read_csv("cleaned_training_data.csv",encoding="ISO-8859-1")
 
+
+# Split Data in X and Y
+X = data['stemmed_content'].values
+Y = data['target'].values
+
+
+
+# Split Data in train-and testData
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.25, stratify=Y, random_state=2)
+
+
+# see the shape of the data
+print(X.shape, X_train.shape, X_test.shape)
+
+vectorizer = TfidfVectorizer()
+
+
+# Vectorize the Data (convert the text data to numbers) astype('U') is used to convert the data to Unicode
+X_train = vectorizer.fit_transform(X_train.astype('U'))
+X_test = vectorizer.transform(X_test.astype('U'))
+
+# Train the Model
+model = LogisticRegression(max_iter=1000)
+model.fit(X_train, Y_train)
+
+
+# MODEL EVALUATION
+
+
+# Accuracy score on the train data
+X_train_prediction = model.predict(X_train)
+training_data_accuracy = accuracy_score(Y_train, X_train_prediction)
+# accuracy score on the train data 80.03%
+
+X_test_prediction = model.predict(X_test)
+test_data_accuracy = accuracy_score(Y_test, X_test_prediction)
+# accuracy score on the test data 77.7%
+
+#Industry Standard for accuracy score is 70% - 80% so we need to improve the model
+
+print("Accuracy score of the training data : ", training_data_accuracy)
+
+print("Accuracy score of the test data : ", test_data_accuracy)
+
+
+filename = 'finalized_model.sav'
+pickle.dump(model, open(filename, 'wb'))
+
+'''
 # Split Data in train-and testData and split both into comments and targets
 rawTrainData = data[:20000]
 trainDataTargets = []
@@ -26,10 +76,13 @@ for i in rawTestData:
     testDataTargets.append(i.__getitem__(0))
     testDataComments.append(i.__getitem__(1))
 
+print("TEST ")
+print(trainDataComments)
 # Put every comment in lowercase so every same Word has the same token
 def standardization(input_data):
     lowercase = tf.strings.lower(input_data)
     return lowercase
+
 
 # Create for every Word in the comments a token (Vectorization)
 # So we're creating a vocabulary
@@ -37,20 +90,18 @@ vectorize_layer = keras.layers.TextVectorization(
     standardize = standardization,
    output_mode = 'int'
 )
+print("MEGA TEST ")
+print(trainDataComments[0:5])
 vectorize_layer.adapt(trainDataComments)
 
 # Connect the vectorized comments with the fitting targets
 def vectorize_text(text, label):
+    print("TEXT: ", text)
     text = tf.expand_dims(text, -1)
-    global counter
-    print(counter)
-    counter += 1
     return [label, vectorize_layer(text)]
 
 trainData = [vectorize_text(a, b) for a,b in zip(trainDataComments, trainDataTargets)]
 testData = [vectorize_text(a,b) for a,b in zip(testDataComments, testDataTargets)]
-
-print(testData)   
 
 # Creating the Model (neural network)
 model = keras.Sequential([
@@ -75,6 +126,10 @@ model = keras.Sequential([
     keras.layers.Dense(1, activation='sigmoid')
 ])
 # Summarize the Model to have a better view on the Model for e.g. checking it  
-print(model.summary())
+
+model.compile(optimizer='adam',
+              loss='binary_crossentropy',
+              metrics=['accuracy'])
 
 # Create Loss-Function and Optimizer
+'''
