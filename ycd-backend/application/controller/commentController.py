@@ -1,11 +1,17 @@
 import requests
+from dotenv import load_dotenv
+import os
+from analysiseComments import predict_comment
+
+load_dotenv()
+api_key = os.getenv("API_KEY")
 
 class CommentController:
     #gets a videoId and gives back the comments of the youtube video as dictionary
     def get_comments(video_id):
         base_url = "https://www.googleapis.com/youtube/v3/commentThreads"
         params = {
-            'key': "AIzaSyCSwEhTATLxgxwpti-WLy0-8ylt4onPizg",
+            'key': api_key,
             'videoId': video_id,
             'part': "snippet",
             'maxResults': 100
@@ -36,8 +42,9 @@ class CommentController:
     
     def controller(video_id):
         comments = CommentController.get_comments(video_id)
-        print(CommentController.clean_comments(comments))
+        predict_comment(CommentController.clean_comments(comments))
+        #print(CommentController.clean_comments(comments))
 
 
-# zum Testen: Video = https://www.youtube.com/watch?v=Yxt_ieWY4LM
-CommentController.controller("Yxt_ieWY4LM")
+# zum Testen: Video = https://www.youtube.com/watch?v=8WZ-4JiwFIo
+CommentController.controller("8WZ-4JiwFIo")

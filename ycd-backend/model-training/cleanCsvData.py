@@ -7,44 +7,33 @@ from nltk.stem import PorterStemmer
 
 download('stopwords')
 
-columns_names = ["target", "text"] 
+columns_names = ["text", "target"]
 
-twitter_data = pd.read_csv("training-data.csv", usecols=columns_names, encoding="ISO-8859-1")
-
-columns2_names = ["text", "target"]
+twitter_data = pd.read_csv("more_data.csv", names=columns_names, encoding="ISO-8859-1", skiprows=1)
 
 corrected_columns = ["target", "text"]
 
-twitter2_data = pd.read_csv("Twitter_Data.csv", names=columns2_names, encoding="ISO-8859-1",skiprows=1)
+twitter2_data = pd.read_csv("more_more_data.csv", names=columns_names, encoding="ISO-8859-1",skiprows=1)
+twitter3_data = pd.read_csv("more_more_more_data.csv", names=columns_names, encoding="ISO-8859-1",skiprows=1)
 
+twitter_data = twitter_data.reindex(columns=corrected_columns)
 twitter2_data = twitter2_data.reindex(columns=corrected_columns)
+twitter3_data = twitter3_data.reindex(columns=corrected_columns)
 #check if Columns are named correctly
 print(twitter2_data.head())
-
-twitter2_data.replace({'target': {1:2}}, inplace=True)
-twitter2_data.replace({'target': {0:1}}, inplace=True)
-twitter2_data.replace({'target': {-1:0}}, inplace=True)
 
 #check if there are any missing values 
 print(twitter2_data.isnull().sum())
 
+twitter_data.dropna(inplace=True)
 twitter2_data.dropna(inplace=True)
-#check the distribution of the target variable
-print(twitter2_data['target'].value_counts())
-
-twitter_data = pd.concat([twitter_data, twitter2_data], ignore_index=True)
-
-#check if Columns are named correctly
-print(twitter_data.head())
-
-#check if there are any missing values
-print(twitter_data.isnull().sum())
-
+twitter3_data.dropna(inplace=True)
 #check the distribution of the target variable
 print(twitter_data['target'].value_counts())
+print(twitter2_data['target'].value_counts())
+print(twitter3_data['target'].value_counts())
 
-# Replace target variable 4 with 1
-twitter_data.replace({'target': {4:2}}, inplace=True)
+twitter_data = pd.concat([twitter_data, twitter2_data, twitter3_data], ignore_index=True)
 
 #Stemming Data so group same words together (e.g. "actor", "acting", "acted" -> "act")
 port_Stem = PorterStemmer()
@@ -67,4 +56,8 @@ twitter_data['stemmed_content'] = twitter_data['text'].apply(stemming)
 
 print(twitter_data.memory_usage().sum() / 1024**2) # Check the memory usage of the dataframe
 
-twitter_data.to_csv("cleaned_training_data.csv", index=False, columns=['target', 'stemmed_content'])
+cleaned_data = pd.read_csv("cleaned_training_data.csv", encoding="ISO-8859-1")
+
+cleaned_data = pd.concat([cleaned_data, twitter_data], ignore_index=True)
+
+cleaned_data.to_csv("cleaned_training_data.csv", index=False, columns=['target', 'stemmed_content'])
