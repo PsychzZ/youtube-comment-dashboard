@@ -1,7 +1,7 @@
 import requests
 from dotenv import load_dotenv
 import os
-from analyse_comments import predict_comment
+from controller.analyse_comments import predict_comment
 
 load_dotenv()
 api_key = os.getenv("API_KEY")
@@ -42,9 +42,10 @@ class CommentController:
     
     def controller(video_id):
         comments = CommentController.get_comments(video_id)
-        predict_comment(CommentController.clean_comments(comments))
+        return predict_comment(CommentController.clean_comments(comments))
         #print(CommentController.clean_comments(comments))
 
 
 # zum Testen: Video = https://www.youtube.com/watch?v=8WZ-4JiwFIo
-CommentController.controller("8WZ-4JiwFIo")
+if __name__ == '__main__':
+    CommentController.controller("8WZ-4JiwFIo")

@@ -1,15 +1,8 @@
 import pickle
-import pandas as pd  # For data manipulation and analysis
-
 
 model = pickle.load(open('finalized_model.sav', 'rb'))  # Loading the trained model
 vectorizer = pickle.load(open('vectorizer.sav', 'rb'))  # Loading the vectorizer
 
-df = pd.read_csv("cleaned_training_data.csv", encoding="ISO-8859-1")  # Reading data from CSV file
-
-df['stemmed_content'] = df['stemmed_content'].astype('U')  # Converting the 'stemmed_content' column to string type
-
-X = df['stemmed_content'].values  # Extracting features
 
 
 def predict_comment(comments: list):
@@ -31,11 +24,8 @@ def predict_comment(comments: list):
       else:
         neutral_count += 1
 
-    print("Positive comments:", positive_count)
-    print("Negative comments:", negative_count)
-    print("Neutral comments:", neutral_count)
-
-
-if __name__ == '__main__':
-    comments = X[:10]  # Selecting first 10 comments for prediction
-    predict_comment(comments)
+    return {
+        'positive_count': positive_count,
+        'negative_count': negative_count,
+        'neutral_count': neutral_count
+    }

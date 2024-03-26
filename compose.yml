@@ -1,0 +1,28 @@
+services:
+  flaskapp:
+    container_name: flaskapp
+    image: flaskapp:1.0.0
+    build:
+      context: ./ycd-backend/application
+      dockerfile: flask.dockerfile
+    ports:
+      - "4000:4000"
+    environment:
+      - DATABASE_URL=postgresql://ycd:ycd@db:5432/ycd
+    depends_on:
+      - db
+
+  db:
+    container_name: db
+    image: postgres:15.6
+    environment:
+      POSTGRES_USER: ycd
+      POSTGRES_PASSWORD: ycd
+      POSTGRES_DB: ycd
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata: {}
