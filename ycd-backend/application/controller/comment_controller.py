@@ -1,7 +1,7 @@
 import requests
 from dotenv import load_dotenv
 import os
-from analysiseComments import predict_comment
+from analyse_comments import predict_comment
 
 load_dotenv()
 api_key = os.getenv("API_KEY")
