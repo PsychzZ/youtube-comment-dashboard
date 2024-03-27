@@ -8,7 +8,6 @@ vectorizer = pickle.load(open('vectorizer.sav', 'rb'))  # Loading the vectorizer
 def predict_comment(comments: list):
     # Preprocess the comment
     comment_vec = vectorizer.transform(comments)  # Transforming the comment into TF-IDF features
-
     # Predict the sentiment of the comment
     prediction = model.predict(comment_vec)  # Predicting the sentiment of the comment
 
