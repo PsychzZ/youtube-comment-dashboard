@@ -124,8 +124,8 @@ function ResponsiveAppBar() {
             <a href="https://gitlab.com/machine-prediction/comment-interpretation/youtube-comment-dashboard">
               <img
                 src={CompanyLogo}
-                width="250px"
-                height="90px"
+                width="125px"
+                height="70px"
                 alt="Company Logo"
               />
             </a>
