@@ -6,11 +6,11 @@ from config import app, db
 @app.route('/videos', methods=['POST'])
 def create_video():
     try:
-      video_id = request.args.get('v')
-      comment_sentiments = CommentController.controller(video_id)
+      video_url = request.get_json()['videoUrl']
+      comment_sentiments = CommentController.controller(video_url)
       return comment_sentiments
     except Exception as e:
-        return make_response(jsonify({'message' : 'error getting Comments from the Video', 'error': str(e)}), 500)
+        return make_response(jsonify({'message' : 'error getting Comments from the Video', 'error': str(e)}), 400)
 
 
 

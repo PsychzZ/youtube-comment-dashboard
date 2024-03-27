@@ -40,7 +40,9 @@ class CommentController:
         clean_comments = [item.get(key, {}).get(subkey1, []).get(subkey2, {}).get(final_key) for item in comments]
         return clean_comments
     
-    def controller(video_id):
+    def controller(videoUrl):
+        test = videoUrl.split("v=")[1]
+        video_id = test.split("&")[0]
         comments = CommentController.get_comments(video_id)
         return predict_comment(CommentController.clean_comments(comments))
         #print(CommentController.clean_comments(comments))

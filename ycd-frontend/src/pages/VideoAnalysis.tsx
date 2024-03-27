@@ -3,35 +3,27 @@ import {
   Container,
   TextField,
   Alert,
-  Snackbar,
   Fade,
+  CircularProgress,
 } from "@mui/material";
 import NavBar from "../components/NavBar";
-import { useEffect, useState } from "react";
+import { useContext } from "react";
+import { VideoContext } from "../hooks/useLink";
+import { PieChart } from "@mui/x-charts/PieChart";
 
-function VideoAnalysis() {
-  const [videoUrl, setVideoUrl] = useState<string>("");
-  const [notValidUrl, setNotValidUrl] = useState<boolean>(false);
-  const [open, setOpen] = useState<boolean>(true);
-
-  useEffect(() => {
-    if (notValidUrl) {
-      setOpen(true);
-    }
-  }, [videoUrl, notValidUrl]);
-
-  function submitVideoUrl() {
-    if (videoUrl) {
-      console.log("Video URL submitted:", videoUrl);
-      const test = videoUrl?.split("v=")[1];
-      const videoId = test?.split("&")[0];
-      if (videoId !== undefined) {
-        console.log(videoId);
-      } else {
-        setNotValidUrl(true);
-      }
-    }
-  }
+export function VideoAnalysis() {
+  const {
+    commentStats,
+    submitVideoUrl,
+    notValidUrl,
+    setOpen,
+    open,
+    videoUrl,
+    setVideoUrl,
+    setNotValidUrl,
+    loading,
+    setLoading,
+  } = useContext(VideoContext);
 
   return (
     <>
@@ -77,9 +69,9 @@ function VideoAnalysis() {
               label: { color: "white" },
               position: "center",
             }}
-            value={videoUrl}
+            value={videoUrl.videoUrl}
             onChange={(event) => {
-              setVideoUrl(event.target.value);
+              setVideoUrl({ videoUrl: event.target.value });
               setNotValidUrl(false);
             }}
             error={notValidUrl}
@@ -89,16 +81,54 @@ function VideoAnalysis() {
             size="large"
             sx={{ margin: "5px" }}
             onClick={() => {
-              submitVideoUrl();
+              submitVideoUrl(videoUrl);
+              setLoading(true);
             }}
           >
             Submit
           </Button>
-          <Snackbar
-            anchorOrigin={{ vertical: "top", horizontal: "right" }}
-            open={false}
-            message="Invalid URL"
-          />
+        </div>
+        <div>
+          <h2>Comments</h2>
+          {loading ? (
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <CircularProgress />
+            </div>
+          ) : (
+            <>
+              {commentStats === undefined ? (
+                <></>
+              ) : (
+                <>
+                  <h3>Positive Comments: {commentStats.positive_count}</h3>
+                  <h3>Neutral Comments: {commentStats.neutral_count}</h3>
+                  <h3>Negative Comments: {commentStats.negative_count}</h3>
+                  <div style={{ width: "80%", height: 300 }}>
+                    <PieChart
+                      series={[
+                        {
+                          data: [
+                            {
+                              label: "Positive",
+                              value: commentStats.positive_count,
+                            },
+                            {
+                              label: "Neutral",
+                              value: commentStats.neutral_count,
+                            },
+                            {
+                              label: "Negative",
+                              value: commentStats.negative_count,
+                            },
+                          ],
+                        },
+                      ]}
+                    ></PieChart>
+                  </div>
+                </>
+              )}
+            </>
+          )}
         </div>
       </Container>
     </>
