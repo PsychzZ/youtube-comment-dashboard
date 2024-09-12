@@ -4,14 +4,12 @@
 
 ## Description
 
-A brief description of your project.
+A Youtube Comment Sentiment Dashboard
 
 ## Table of Contents
 
 - [Installation](#installation)
 - [Usage](#usage)
-- [Features](#features)
-- [Contributing](#contributing)
 - [License](#license)
 - [Contact](#contact)
 
@@ -22,14 +20,6 @@ Instructions on how to install and set up your project.
 ## Usage
 
 Guidelines on how to use your application or library.
-
-## Features
-
-Highlight the key features of your project.
-
-## Contributing
-
-Information on how others can contribute to your project.
 
 ## License
 
