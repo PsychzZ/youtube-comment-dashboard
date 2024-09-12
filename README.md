@@ -39,11 +39,6 @@ This project is licensed under the [MIT License](LICENSE).
 
 ### Max Lehmann
 
-- Email: your-email@example.com
+- Email:  <privat@maxlehmann.net>
 - GitHub: [PsychzZ](https://github.com/psychzZ)
 - GitLab: [PsychzZ](https://gitlab.com/psychzZ)
-
-### Jann Eike Ackermann
-
-- Email: your-email@example.com
-- GitLab: [PsoochzZ](https://gitlab.com/psoochzz)
