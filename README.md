@@ -29,6 +29,5 @@ This project is licensed under the [MIT License](LICENSE).
 
 ### Max Lehmann
 
-- Email:  <privat@maxlehmann.net>
 - GitHub: [PsychzZ](https://github.com/psychzZ)
 - GitLab: [PsychzZ](https://gitlab.com/psychzZ)
